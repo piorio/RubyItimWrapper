@@ -1,6 +1,11 @@
 require 'savon'
 require 'json'
 
+=begin
+@TODO: Method to implement:
+[:decrypt, :encrypt, :get_challenge_questions, :get_property,:lost_password_login_direct_entry, :lost_password_login_reset_password]
+=end
+
 class WSItimSession
   attr_reader :host, :port, :context_root, :protocol, :ssl_verify, :definitive_url, :authenticate
   attr_accessor :connection_to_host_timeout
@@ -66,6 +71,7 @@ class WSItimSession
   end
 
   def logout
+    #This method doesn't call the remote function, but clear all session information
     if(@connection_valid && @authenticate)
       @session_id = nil
       @client_session = nil
@@ -98,6 +104,60 @@ class WSItimSession
       end
     end
 
+    false
+  end
+
+  def get_itim_fixpack_level
+    if(@connection_valid)
+      response = @client.call(:get_itim_fixpack_level)
+      if response.success?
+        return response.body[:get_itim_fixpack_level_response][:get_itim_fixpack_level_return]
+      end
+    end
+
+    false
+  end
+
+  def get_webservices_build_number
+    if(@connection_valid)
+      response = @client.call(:get_web_services_build_number)
+      if response.success?
+        return response.body[:get_web_services_build_number_response][:get_web_services_build_number_return]
+      end
+    end
+
+    false
+  end
+
+  def get_webservices_version
+    if(@connection_valid)
+      response = @client.call(:get_web_services_version)
+      if response.success?
+        return response.body[:get_web_services_version_response][:get_web_services_version_return]
+      end
+    end
+
+    false
+  end
+
+  def get_webservices_target_type
+    if(@connection_valid)
+      response = @client.call(:get_web_services_target_type)
+      if response.success?
+        return response.body[:get_web_services_target_type_response][:get_web_services_target_type_return]
+      end
+    end
+
+    false
+  end
+
+  def is_password_editing_allowed
+    if(@connection_valid && @authenticate)
+      response = @client.call(:is_password_editing_allowed,message:{session:{locale: @locale, clientSession: @client_session, enforceChallengeResponse: @enforce_challenge, sessionID: @session_id}})
+      if response.success?
+        return response.body[:is_password_editing_allowed_response][:is_password_editing_allowed_return]
+      end
+    end
     false
   end
 

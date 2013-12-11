@@ -12,12 +12,22 @@ p ret
 
 p test.is_authenticate_session?
 
-test.logout
-
-p test.is_authenticate_session?
-
 p test.get_itim_version
 
 p JSON.parse(test.get_itim_version_info(true))['build_time']
 
 p test.get_itim_version_info
+
+p test.get_itim_fixpack_level
+
+p test.get_webservices_build_number
+
+p test.get_webservices_version
+
+p test.get_webservices_target_type
+
+p "IS: #{test.is_password_editing_allowed}"
+
+test.logout
+
+p test.is_authenticate_session?
